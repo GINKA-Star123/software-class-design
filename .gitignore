@@ -55,6 +55,7 @@ frontend/.pnpm-store/
 
 # Runtime uploaded files
 uploads/*
+!uploads/README.md
 !uploads/.gitkeep
 !uploads/covers/
 !uploads/covers/.gitkeep
