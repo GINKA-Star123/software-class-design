@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.achievement.mapper.AchievementMapper">
+    <sql id="cols">ach_id, ach_code, ach_name, description, ach_type, story_id, status, create_time</sql>
+    <select id="selectById" resultType="com.example.storyworkshop.module.achievement.entity.Achievement">SELECT <include refid="cols"/> FROM achievement WHERE ach_id=#{achId}</select>
+    <select id="selectByCode" resultType="com.example.storyworkshop.module.achievement.entity.Achievement">SELECT <include refid="cols"/> FROM achievement WHERE ach_code=#{code} LIMIT 1</select>
+    <select id="selectAll" resultType="com.example.storyworkshop.module.achievement.entity.Achievement">SELECT <include refid="cols"/> FROM achievement WHERE status=1 ORDER BY ach_id</select>
+    <select id="selectByStory" resultType="com.example.storyworkshop.module.achievement.entity.Achievement">SELECT <include refid="cols"/> FROM achievement WHERE story_id=#{storyId} AND status=1 ORDER BY ach_id</select>
+</mapper>

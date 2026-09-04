@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.achievement.mapper.UserAchievementMapper">
+    <insert id="insert">INSERT INTO user_achievement (user_id, ach_id) VALUES (#{userId}, #{achId})</insert>
+    <select id="exists" resultType="int">SELECT COUNT(*) FROM user_achievement WHERE user_id=#{userId} AND ach_id=#{achId}</select>
+    <select id="selectCodesByUserId" resultType="string">
+        SELECT a.ach_code FROM user_achievement ua JOIN achievement a ON ua.ach_id=a.ach_id WHERE ua.user_id=#{userId}
+    </select>
+</mapper>

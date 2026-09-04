@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.play.mapper.ProgressMapper">
+    <sql id="cols">
+        p.progress_id, p.user_id, p.story_id, p.current_node_id, p.slot_no, p.status, p.history,
+        p.ending_count, p.create_time, p.update_time, s.title AS story_title
+    </sql>
+    <select id="selectById" resultType="com.example.storyworkshop.module.play.entity.GameProgress">
+        SELECT <include refid="cols"/> FROM game_progress p JOIN story s ON p.story_id=s.story_id WHERE p.progress_id=#{progressId}
+    </select>
+    <select id="selectByUserStory" resultType="com.example.storyworkshop.module.play.entity.GameProgress">
+        SELECT <include refid="cols"/> FROM game_progress p JOIN story s ON p.story_id=s.story_id WHERE p.user_id=#{userId} AND p.story_id=#{storyId} ORDER BY p.update_time DESC
+    </select>
+    <select id="selectOngoing" resultType="com.example.storyworkshop.module.play.entity.GameProgress">
+        SELECT <include refid="cols"/> FROM game_progress p JOIN story s ON p.story_id=s.story_id WHERE p.user_id=#{userId} AND p.story_id=#{storyId} AND p.status=0 ORDER BY p.update_time DESC LIMIT 1
+    </select>
+    <select id="selectByUser" resultType="com.example.storyworkshop.module.play.entity.GameProgress">
+        SELECT <include refid="cols"/>, n.node_text AS current_node_text, n.ending_title AS current_ending_title
+        FROM game_progress p JOIN story s ON p.story_id=s.story_id
+        LEFT JOIN story_node n ON p.current_node_id=n.node_id
+        WHERE p.user_id=#{userId} ORDER BY p.update_time DESC
+    </select>
+    <insert id="insert" parameterType="com.example.storyworkshop.module.play.entity.GameProgress" useGeneratedKeys="true" keyProperty="progressId">
+        INSERT INTO game_progress (user_id, story_id, current_node_id, slot_no, status, history, ending_count)
+        VALUES (#{userId},#{storyId},#{currentNodeId},#{slotNo},#{status},#{history},#{endingCount})
+    </insert>
+    <update id="update" parameterType="com.example.storyworkshop.module.play.entity.GameProgress">
+        UPDATE game_progress SET current_node_id=#{currentNodeId}, status=#{status}, history=#{history}, ending_count=#{endingCount} WHERE progress_id=#{progressId}
+    </update>
+    <delete id="deleteById">DELETE FROM game_progress WHERE progress_id=#{progressId}</delete>
+</mapper>

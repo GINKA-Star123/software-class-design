@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.story.mapper.StoryChoiceMapper">
+    <sql id="cols">
+        c.choice_id, c.from_node_id, c.to_node_id, c.choice_text, c.condition_expr, c.sort_order,
+        c.create_time, c.update_time, t.story_id AS to_node_story_id, t.node_text AS to_node_text,
+        t.is_ending AS to_is_ending, t.is_start AS to_is_start
+    </sql>
+    <select id="selectById" resultType="com.example.storyworkshop.module.story.entity.StoryChoice">
+        SELECT <include refid="cols"/> FROM story_choice c LEFT JOIN story_node t ON c.to_node_id=t.node_id WHERE c.choice_id=#{choiceId}
+    </select>
+    <select id="selectByFromNode" resultType="com.example.storyworkshop.module.story.entity.StoryChoice">
+        SELECT <include refid="cols"/> FROM story_choice c LEFT JOIN story_node t ON c.to_node_id=t.node_id WHERE c.from_node_id=#{fromNodeId} ORDER BY c.sort_order, c.choice_id
+    </select>
+    <select id="selectByStory" resultType="com.example.storyworkshop.module.story.entity.StoryChoice">
+        SELECT <include refid="cols"/> FROM story_choice c
+        JOIN story_node f ON c.from_node_id=f.node_id
+        LEFT JOIN story_node t ON c.to_node_id=t.node_id
+        WHERE f.story_id=#{storyId} ORDER BY c.choice_id
+    </select>
+    <insert id="insert" parameterType="com.example.storyworkshop.module.story.entity.StoryChoice" useGeneratedKeys="true" keyProperty="choiceId">
+        INSERT INTO story_choice (from_node_id, to_node_id, choice_text, condition_expr, sort_order) VALUES (#{fromNodeId},#{toNodeId},#{choiceText},#{conditionExpr},#{sortOrder})
+    </insert>
+    <update id="update" parameterType="com.example.storyworkshop.module.story.entity.StoryChoice">
+        UPDATE story_choice SET to_node_id=#{toNodeId}, choice_text=#{choiceText}, condition_expr=#{conditionExpr}, sort_order=#{sortOrder} WHERE choice_id=#{choiceId}
+    </update>
+    <delete id="deleteById">DELETE FROM story_choice WHERE choice_id=#{choiceId}</delete>
+    <delete id="deleteByNode">DELETE FROM story_choice WHERE from_node_id=#{nodeId} OR to_node_id=#{nodeId}</delete>
+</mapper>

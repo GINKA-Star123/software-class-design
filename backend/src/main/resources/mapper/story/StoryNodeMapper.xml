@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.story.mapper.StoryNodeMapper">
+    <sql id="cols">node_id, story_id, node_text, is_start, is_ending, ending_title, sort_order, create_time, update_time</sql>
+    <select id="selectById" resultType="com.example.storyworkshop.module.story.entity.StoryNode">SELECT <include refid="cols"/> FROM story_node WHERE node_id=#{nodeId}</select>
+    <select id="selectStartByStory" resultType="com.example.storyworkshop.module.story.entity.StoryNode">SELECT <include refid="cols"/> FROM story_node WHERE story_id=#{storyId} AND is_start=1 ORDER BY node_id LIMIT 1</select>
+    <select id="selectByStory" resultType="com.example.storyworkshop.module.story.entity.StoryNode">SELECT <include refid="cols"/> FROM story_node WHERE story_id=#{storyId} ORDER BY sort_order, node_id</select>
+    <select id="countByStory" resultType="int">SELECT COUNT(*) FROM story_node WHERE story_id=#{storyId}</select>
+    <select id="countEndingByStory" resultType="int">SELECT COUNT(*) FROM story_node WHERE story_id=#{storyId} AND is_ending=1</select>
+    <insert id="insert" parameterType="com.example.storyworkshop.module.story.entity.StoryNode" useGeneratedKeys="true" keyProperty="nodeId">
+        INSERT INTO story_node (story_id, node_text, is_start, is_ending, ending_title, sort_order) VALUES (#{storyId},#{nodeText},#{isStart},#{isEnding},#{endingTitle},#{sortOrder})
+    </insert>
+    <update id="update" parameterType="com.example.storyworkshop.module.story.entity.StoryNode">
+        UPDATE story_node SET node_text=#{nodeText}, is_start=#{isStart}, is_ending=#{isEnding}, ending_title=#{endingTitle}, sort_order=#{sortOrder} WHERE node_id=#{nodeId}
+    </update>
+    <delete id="deleteById">DELETE FROM story_node WHERE node_id=#{nodeId}</delete>
+</mapper>

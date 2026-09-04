@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.stat.mapper.StatMapper">
+    <sql id="cols">
+        s.story_id, s.author_id, s.title, s.intro, s.category, s.cover_url, s.status, s.reject_reason,
+        s.play_count, s.like_count, s.favorite_count, s.comment_count, s.create_time, s.update_time,
+        u.nickname AS author_name
+    </sql>
+    <select id="selectHot" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="cols"/>, (s.play_count + 2*s.like_count + 3*s.favorite_count + 4*s.comment_count) AS heat
+        FROM story s LEFT JOIN `user` u ON s.author_id=u.user_id
+        WHERE s.status=2
+        ORDER BY (s.play_count + 2*s.like_count + 3*s.favorite_count + 4*s.comment_count) DESC, s.publish_time DESC
+        LIMIT #{limit}
+    </select>
+    <select id="selectNewest" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="cols"/> FROM story s LEFT JOIN `user` u ON s.author_id=u.user_id
+        WHERE s.status=2 ORDER BY s.publish_time DESC LIMIT #{limit}
+    </select>
+    <select id="selectDashboard" resultType="map">
+        SELECT
+          (SELECT COUNT(*) FROM `user`) AS totalUsers,
+          (SELECT COUNT(*) FROM story) AS totalStories,
+          (SELECT COUNT(*) FROM story WHERE status=2) AS publishedStories,
+          (SELECT COUNT(*) FROM story WHERE status=1) AS pendingStories,
+          (SELECT COALESCE(SUM(play_count),0) FROM story) AS totalPlays,
+          (SELECT COUNT(*) FROM report WHERE status=0) AS pendingReports
+    </select>
+</mapper>

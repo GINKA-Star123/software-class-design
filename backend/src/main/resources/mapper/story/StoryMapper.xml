@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.story.mapper.StoryMapper">
+    <sql id="baseCols">
+        s.story_id, s.author_id, s.title, s.intro, s.category, s.cover_url, s.status, s.reject_reason,
+        s.audit_user_id, s.audit_time, s.publish_time, s.play_count, s.like_count, s.favorite_count,
+        s.comment_count, s.create_time, s.update_time, u.nickname AS author_name
+    </sql>
+    <select id="selectById" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="baseCols"/> FROM story s LEFT JOIN `user` u ON s.author_id = u.user_id WHERE s.story_id = #{storyId}
+    </select>
+    <select id="selectByAuthor" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="baseCols"/> FROM story s LEFT JOIN `user` u ON s.author_id = u.user_id WHERE s.author_id = #{authorId} ORDER BY s.update_time DESC
+    </select>
+    <select id="selectPublished" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="baseCols"/> FROM story s LEFT JOIN `user` u ON s.author_id = u.user_id
+        WHERE s.status = 2
+        <if test="keyword != null and keyword != ''">AND (s.title LIKE CONCAT('%',#{keyword},'%') OR s.intro LIKE CONCAT('%',#{keyword},'%'))</if>
+        <if test="category != null and category != ''">AND s.category = #{category}</if>
+        <choose>
+            <when test="sort == 'hot'">ORDER BY (s.play_count + 2*s.like_count + 3*s.favorite_count + 4*s.comment_count) DESC</when>
+            <otherwise>ORDER BY s.publish_time DESC</otherwise>
+        </choose>
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countPublished" resultType="long">
+        SELECT COUNT(*) FROM story WHERE status = 2
+        <if test="keyword != null and keyword != ''">AND (title LIKE CONCAT('%',#{keyword},'%') OR intro LIKE CONCAT('%',#{keyword},'%'))</if>
+        <if test="category != null and category != ''">AND category = #{category}</if>
+    </select>
+    <select id="selectByStatus" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="baseCols"/> FROM story s LEFT JOIN `user` u ON s.author_id = u.user_id
+        <where><if test="status != null">s.status = #{status}</if></where>
+        ORDER BY s.update_time DESC LIMIT #{limit}
+    </select>
+    <select id="selectPendingBefore" resultType="com.example.storyworkshop.module.story.entity.Story">
+        SELECT <include refid="baseCols"/> FROM story s LEFT JOIN `user` u ON s.author_id = u.user_id
+        WHERE s.status = 1 ORDER BY s.update_time DESC LIMIT #{limit}
+    </select>
+    <insert id="insert" parameterType="com.example.storyworkshop.module.story.entity.Story" useGeneratedKeys="true" keyProperty="storyId">
+        INSERT INTO story (author_id, title, intro, category, cover_url, status)
+        VALUES (#{authorId}, #{title}, #{intro}, #{category}, #{coverUrl}, #{status})
+    </insert>
+    <update id="updateBasic" parameterType="com.example.storyworkshop.module.story.entity.Story">
+        UPDATE story SET title=#{title}, intro=#{intro}, category=#{category}, cover_url=#{coverUrl} WHERE story_id=#{storyId}
+    </update>
+    <update id="updateStatus">
+        UPDATE story SET status=#{status} WHERE story_id=#{storyId}
+    </update>
+    <update id="updateAudit">
+        UPDATE story SET status=#{status}, reject_reason=#{rejectReason}, audit_user_id=#{auditUserId}, audit_time=NOW()
+        <if test="status == 2">, publish_time=NOW()</if>
+        WHERE story_id=#{storyId}
+    </update>
+    <delete id="deleteById">DELETE FROM story WHERE story_id=#{storyId}</delete>
+    <update id="changeCount">UPDATE story SET ${field}=${field}+#{delta} WHERE story_id=#{storyId}</update>
+</mapper>
