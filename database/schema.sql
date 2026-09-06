@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS favorite;
 DROP TABLE IF EXISTS like_record;
 DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS game_progress;
+DROP TABLE IF EXISTS story_delete_request;
 DROP TABLE IF EXISTS story_choice;
 DROP TABLE IF EXISTS story_node;
 DROP TABLE IF EXISTS story;
@@ -120,6 +121,23 @@ CREATE TABLE story_choice (
   CONSTRAINT fk_choice_to_node
     FOREIGN KEY (to_node_id) REFERENCES story_node (node_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='故事选项表';
+
+CREATE TABLE story_delete_request (
+  req_id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '删除申请ID',
+  story_id BIGINT NOT NULL COMMENT '故事ID',
+  requester_id BIGINT NOT NULL COMMENT '申请人(作者)ID',
+  reason VARCHAR(500) DEFAULT NULL COMMENT '删除理由',
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '状态：0待处理 1已同意 2已拒绝',
+  handle_user_id BIGINT DEFAULT NULL COMMENT '处理人ID',
+  handle_result VARCHAR(500) DEFAULT NULL COMMENT '处理结果备注',
+  create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '申请时间',
+  handle_time DATETIME DEFAULT NULL COMMENT '处理时间',
+  KEY idx_delreq_story (story_id),
+  KEY idx_delreq_status (status),
+  CONSTRAINT fk_delreq_story FOREIGN KEY (story_id) REFERENCES story (story_id) ON DELETE CASCADE,
+  CONSTRAINT fk_delreq_user FOREIGN KEY (requester_id) REFERENCES `user` (user_id) ON DELETE CASCADE,
+  CONSTRAINT fk_delreq_handle FOREIGN KEY (handle_user_id) REFERENCES `user` (user_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='故事删除申请表';
 
 CREATE TABLE game_progress (
   progress_id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '进度 ID',

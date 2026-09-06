@@ -57,11 +57,23 @@ public class StoryEngineService {
     public PlayNodeVO start(Long userId, Long storyId, Integer requestedSlot) {
         Story story = storyMapper.selectById(storyId);
         if (story == null || !StoryStatusConstants.canPlay(story.getStatus())) throw new BusinessException(ResultCode.STORY_NOT_PUBLISHED);
+        storyMapper.changeCount(story.getStoryId(), "play_count", 1);
         StoryNode start = nodeMapper.selectStartByStory(storyId);
         if (start == null) throw new BusinessException(ResultCode.STORY_NODE_NOT_FOUND, "故事缺少起始节点");
 
         GameProgress ongoing = progressMapper.selectOngoing(userId, storyId);
-        if (ongoing != null) return buildNode(ongoing.getProgressId(), story, nodeById(ongoing.getCurrentNodeId(), start), codesOf(userId), endingsOf(ongoing));
+        if (ongoing != null) {
+            StoryNode cur = ongoing.getCurrentNodeId() == null ? null : nodeMapper.selectById(ongoing.getCurrentNodeId());
+            if (cur == null || !storyId.equals(cur.getStoryId())) {
+                // 原节点已被删除/重构：自动重置到起始节点
+                ongoing.setCurrentNodeId(start.getNodeId());
+                ongoing.setStatus(0);
+                ongoing.setHistory(toJsonPath(List.of(), List.of()));
+                ongoing.setEndingCount(0);
+                progressMapper.update(ongoing);
+            }
+            return buildNode(ongoing.getProgressId(), story, start, codesOf(userId), endingsOf(ongoing));
+        }
 
         List<GameProgress> rows = progressMapper.selectByUserStory(userId, storyId);
         GameProgress progress;
@@ -107,7 +119,16 @@ public class StoryEngineService {
         StoryChoice choice = choiceMapper.selectById(choiceId);
         if (choice == null) throw new BusinessException(ResultCode.STORY_CHOICE_NOT_FOUND);
         StoryNode current = nodeMapper.selectById(progress.getCurrentNodeId());
-        if (current == null || !current.getNodeId().equals(choice.getFromNodeId())) throw new BusinessException(ResultCode.STORY_CHOICE_NOT_FOUND, "选项与当前节点不匹配");
+        if (current == null || !current.getNodeId().equals(choice.getFromNodeId())) {
+            // 前端状态过期：选项仍属于本故事则自动把进度同步到该节点，避免“选项与当前节点不匹配”
+            StoryNode fromNode = nodeMapper.selectById(choice.getFromNodeId());
+            if (fromNode == null || !fromNode.getStoryId().equals(progress.getStoryId())) {
+                throw new BusinessException(ResultCode.STORY_CHOICE_NOT_FOUND, "选项与当前节点不匹配");
+            }
+            current = fromNode;
+            progress.setCurrentNodeId(fromNode.getNodeId());
+            progressMapper.update(progress);
+        }
         Story story = storyMapper.selectById(progress.getStoryId());
         if (story == null || !StoryStatusConstants.canPlay(story.getStatus())) throw new BusinessException(ResultCode.STORY_NOT_PUBLISHED);
 

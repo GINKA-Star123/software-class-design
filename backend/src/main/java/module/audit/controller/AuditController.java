@@ -64,6 +64,24 @@ public class AuditController {
         return Result.success("已下架", null);
     }
 
+    @GetMapping("/delete-requests")
+    public Result<java.util.List<com.example.storyworkshop.module.audit.entity.StoryDeleteRequest>> deleteRequests(HttpSession session) {
+        operator(session);
+        return Result.success(auditService.deleteRequests());
+    }
+
+    @PostMapping("/delete-requests/{reqId}/approve")
+    public Result<Void> approveDelete(@PathVariable Long reqId, HttpSession session) {
+        auditService.approveDeleteRequest(operator(session), reqId);
+        return Result.success("已同意删除", null);
+    }
+
+    @PostMapping("/delete-requests/{reqId}/reject")
+    public Result<Void> rejectDelete(@PathVariable Long reqId, @RequestBody(required = false) RejectRequest request, HttpSession session) {
+        auditService.rejectDeleteRequest(operator(session), reqId, request == null ? "" : request.getReason());
+        return Result.success("已拒绝删除申请", null);
+    }
+
     @GetMapping("/reports")
     public Result<List<ReportHandleVO>> reports(HttpSession session) {
         operator(session);

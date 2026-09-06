@@ -86,6 +86,15 @@ public class StoryController {
         return Result.success("已提交审核", null);
     }
 
+    @PostMapping("/{storyId}/delete-request")
+    public Result<Void> deleteRequest(@PathVariable Long storyId,
+                                      @RequestBody(required = false) java.util.Map<String, String> body,
+                                      HttpSession session) {
+        storyService.createDeleteRequest(authService.requireLoginUserId(session), storyId,
+                body == null ? null : body.get("reason"));
+        return Result.success("删除申请已提交，等待审核", null);
+    }
+
     @PostMapping("/{storyId}/validate")
     public Result<StoryValidationVO> validate(@PathVariable Long storyId, HttpSession session) {
         storyService.requireOwned(authService.requireLoginUserId(session), storyId);

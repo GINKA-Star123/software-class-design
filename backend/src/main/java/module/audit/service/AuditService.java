@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.storyworkshop.common.constant.StoryStatusConstants;
 import com.example.storyworkshop.common.exception.BusinessException;
 import com.example.storyworkshop.common.result.ResultCode;
+import com.example.storyworkshop.module.audit.entity.StoryDeleteRequest;
+import com.example.storyworkshop.module.audit.mapper.StoryDeleteRequestMapper;
 import com.example.storyworkshop.module.audit.vo.AuditStoryVO;
 import com.example.storyworkshop.module.audit.vo.ReportHandleVO;
 import com.example.storyworkshop.module.interact.entity.Report;
@@ -22,11 +24,14 @@ public class AuditService {
     private final StoryMapper storyMapper;
     private final StoryNodeMapper nodeMapper;
     private final ReportMapper reportMapper;
+    private final StoryDeleteRequestMapper deleteRequestMapper;
 
-    public AuditService(StoryMapper storyMapper, StoryNodeMapper nodeMapper, ReportMapper reportMapper) {
+    public AuditService(StoryMapper storyMapper, StoryNodeMapper nodeMapper, ReportMapper reportMapper,
+                        StoryDeleteRequestMapper deleteRequestMapper) {
         this.storyMapper = storyMapper;
         this.nodeMapper = nodeMapper;
         this.reportMapper = reportMapper;
+        this.deleteRequestMapper = deleteRequestMapper;
     }
 
     public List<AuditStoryVO> pendingStories() {
@@ -104,6 +109,36 @@ public class AuditService {
         }
         report.setHandleUserId(operatorId);
         reportMapper.updateHandle(report);
+    }
+
+    public java.util.List<StoryDeleteRequest> deleteRequests() {
+        return deleteRequestMapper.selectPending(200);
+    }
+
+    public void approveDeleteRequest(Long operatorId, Long reqId) {
+        StoryDeleteRequest request = requireRequest(reqId);
+        Story story = storyMapper.selectById(request.getStoryId());
+        if (story != null) {
+            storyMapper.deleteById(request.getStoryId());
+        }
+        request.setStatus(1);
+        request.setHandleUserId(operatorId);
+        request.setHandleResult("已同意删除");
+        deleteRequestMapper.updateHandle(request);
+    }
+
+    public void rejectDeleteRequest(Long operatorId, Long reqId, String reason) {
+        StoryDeleteRequest request = requireRequest(reqId);
+        request.setStatus(2);
+        request.setHandleUserId(operatorId);
+        request.setHandleResult(reason == null ? "已拒绝删除申请" : reason);
+        deleteRequestMapper.updateHandle(request);
+    }
+
+    private StoryDeleteRequest requireRequest(Long reqId) {
+        StoryDeleteRequest request = deleteRequestMapper.selectById(reqId);
+        if (request == null) throw new BusinessException(ResultCode.NOT_FOUND, "删除申请不存在");
+        return request;
     }
 
     private Story requirePending(Long storyId) {

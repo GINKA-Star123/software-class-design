@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.storyworkshop.module.audit.mapper.StoryDeleteRequestMapper">
+    <insert id="insert" parameterType="com.example.storyworkshop.module.audit.entity.StoryDeleteRequest" useGeneratedKeys="true" keyProperty="reqId">
+        INSERT INTO story_delete_request (story_id, requester_id, reason, status) VALUES (#{storyId},#{requesterId},#{reason},0)
+    </insert>
+    <select id="selectById" resultType="com.example.storyworkshop.module.audit.entity.StoryDeleteRequest">
+        SELECT req_id,story_id,requester_id,reason,status,handle_user_id,handle_result,create_time,handle_time
+        FROM story_delete_request WHERE req_id=#{reqId}
+    </select>
+    <select id="countPending" resultType="int">
+        SELECT COUNT(*) FROM story_delete_request WHERE story_id=#{storyId} AND status=0
+    </select>
+    <select id="selectPending" resultType="com.example.storyworkshop.module.audit.entity.StoryDeleteRequest">
+        SELECT r.req_id,r.story_id,r.requester_id,r.reason,r.status,r.create_time,
+               s.title AS story_title, u.nickname AS requester_name
+        FROM story_delete_request r
+        JOIN story s ON r.story_id=s.story_id
+        JOIN `user` u ON r.requester_id=u.user_id
+        WHERE r.status=0 ORDER BY r.create_time DESC LIMIT #{limit}
+    </select>
+    <update id="updateHandle" parameterType="com.example.storyworkshop.module.audit.entity.StoryDeleteRequest">
+        UPDATE story_delete_request SET status=#{status}, handle_user_id=#{handleUserId}, handle_result=#{handleResult}, handle_time=NOW()
+        WHERE req_id=#{reqId}
+    </update>
+</mapper>

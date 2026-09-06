@@ -11,6 +11,8 @@ import com.example.storyworkshop.common.constant.StoryStatusConstants;
 import com.example.storyworkshop.common.exception.BusinessException;
 import com.example.storyworkshop.common.result.ResultCode;
 import com.example.storyworkshop.module.story.dto.StoryCreateRequest;
+import com.example.storyworkshop.module.audit.entity.StoryDeleteRequest;
+import com.example.storyworkshop.module.audit.mapper.StoryDeleteRequestMapper;
 import com.example.storyworkshop.module.story.dto.StoryQueryRequest;
 import com.example.storyworkshop.module.story.dto.StoryUpdateRequest;
 import com.example.storyworkshop.module.story.entity.Story;
@@ -25,11 +27,14 @@ public class StoryService {
     private final StoryMapper storyMapper;
     private final StoryNodeMapper nodeMapper;
     private final StoryValidator validator;
+    private final StoryDeleteRequestMapper deleteRequestMapper;
 
-    public StoryService(StoryMapper storyMapper, StoryNodeMapper nodeMapper, StoryValidator validator) {
+    public StoryService(StoryMapper storyMapper, StoryNodeMapper nodeMapper, StoryValidator validator,
+                        StoryDeleteRequestMapper deleteRequestMapper) {
         this.storyMapper = storyMapper;
         this.nodeMapper = nodeMapper;
         this.validator = validator;
+        this.deleteRequestMapper = deleteRequestMapper;
     }
 
     public Story requireStory(Long storyId) {
@@ -107,6 +112,21 @@ public class StoryService {
 
     public StoryValidationVO validate(Long storyId) {
         return validator.validate(storyId);
+    }
+
+    public void createDeleteRequest(Long operatorId, Long storyId, String reason) {
+        Story story = requireOwned(operatorId, storyId);
+        if (story.getStatus() == null || story.getStatus() == 0 || story.getStatus() == 3) {
+            throw new BusinessException(ResultCode.STORY_STATUS_ERROR, "草稿或已驳回故事可直接删除，无需申请");
+        }
+        if (deleteRequestMapper.countPending(storyId) > 0) {
+            throw new BusinessException(ResultCode.DUPLICATE_OPERATION, "该故事已有待处理的删除申请");
+        }
+        StoryDeleteRequest request = new StoryDeleteRequest();
+        request.setStoryId(storyId);
+        request.setRequesterId(operatorId);
+        request.setReason(reason);
+        deleteRequestMapper.insert(request);
     }
 
     public Story requireOwned(Long operatorId, Long storyId) {

@@ -1,0 +1,10 @@
+import request from '../utils/request'
+export const auditStories = () => request.get('/audit/stories')
+export const approveStory = (id) => request.post('/audit/stories/' + id + '/approve')
+export const rejectStory = (id, reason) => request.post('/audit/stories/' + id + '/reject', { reason })
+export const offlineStory = (id, reason = '') => request.post('/audit/stories/' + id + '/offline', { reason })
+export const deleteRequests = () => request.get('/audit/delete-requests')
+export const approveDeleteRequest = (id) => request.post('/audit/delete-requests/' + id + '/approve')
+export const rejectDeleteRequest = (id, reason) => request.post('/audit/delete-requests/' + id + '/reject', { reason })
+export const auditReports = () => request.get('/audit/reports')
+export const handleReport = (id, action) => request.post('/audit/reports/' + id + '/handle', null, { params: { action } })

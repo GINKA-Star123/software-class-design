@@ -1,0 +1,8 @@
+@media (max-width: 767px) {
+  .page { padding: 12px 10px 30px; }
+  .page-title { font-size: 19px; }
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .page { max-width: 760px; }
+}
