@@ -41,7 +41,8 @@ services:
       DB_PASSWORD: ${MYSQL_PASSWORD:-123456}
       TZ: Asia/Shanghai
     ports:
-      # 容器内 8080，映射到宿主机 8081，与现有前端代理保持一致
+      # 容器内 8080；80 供 Vercel/公网转发，8081 保留给本地直接调试
+      - "80:8080"
       - "8081:8080"
     volumes:
       # 封面上传文件保存在命名卷中，重建容器不会丢失
