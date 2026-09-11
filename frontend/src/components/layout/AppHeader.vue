@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <el-drawer v-model="appearanceOpen" title="网站外观" size="380px">
+    <el-drawer v-model="appearanceOpen" title="网站外观" size="380px" append-to-body>
       <div class="drawer-section">
         <p class="drawer-title">背景主题</p>
         <p class="drawer-tip">选择后立即应用，并保存在当前浏览器。</p>
