@@ -84,6 +84,7 @@ import { useUserStore } from '../../store/user'
 import { useSiteThemeStore, SITE_THEMES } from '../../store/siteTheme'
 import { applyAuthor as apiApplyAuthor } from '../../api/user'
 import { uploadCover } from '../../api/upload'
+import { validateImageFile } from '../../utils/imageUpload'
 
 const store = useUserStore()
 const siteTheme = useSiteThemeStore()
@@ -107,6 +108,11 @@ async function applyAuthor() {
 }
 
 async function uploadBg({ file }) {
+  const check = validateImageFile(file)
+  if (!check.ok) {
+    ElMessage.warning(check.message)
+    return
+  }
   bgUploading.value = true
   try {
     const res = await uploadCover(file)

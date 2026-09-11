@@ -197,6 +197,7 @@ import {
 } from '../api/editor'
 import { getStory } from '../api/story'
 import { uploadCover } from '../api/upload'
+import { validateImageFile } from '../utils/imageUpload'
 import PageTitle from '../components/common/PageTitle.vue'
 import EmptyState from '../components/common/EmptyState.vue'
 import NodeTreeComponent from '../components/editor/NodeTreeComponent.vue'
@@ -328,6 +329,11 @@ async function loadMeta() {
 }
 
 async function doUpload({ file }) {
+  const check = validateImageFile(file)
+  if (!check.ok) {
+    ElMessage.warning(check.message)
+    return
+  }
   try {
     const res = await uploadCover(file)
     meta.coverUrl = res.url
