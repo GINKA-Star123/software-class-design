@@ -75,7 +75,7 @@
             {{ t.label }}
           </button>
         </div>
-        <p class="theme-tip">只影响你的编辑工作区；玩家看到的背景来自故事封面。</p>
+        <p class="theme-tip">这里只调整编辑工作区；全站背景请在顶部“外观”中设置。</p>
       </div>
     </section>
 

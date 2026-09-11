@@ -15,6 +15,7 @@ services:
       # 首次启动时按文件名顺序自动建库建表 + 灌入主线数据
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./database/sample_stories.sql:/docker-entrypoint-initdb.d/03-sample-stories.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
