@@ -17,7 +17,11 @@ service.interceptors.response.use(
         localStorage.removeItem('sw_user')
         if (router.currentRoute.value.name !== 'login') router.push({ name: 'login' })
       }
-      ElMessage.error(d.message || '操作失败')
+      if (d.code === 403) {
+        ElMessage.error('没有操作权限：请使用 official 演示账号，或先在右上角“成为作者”')
+      } else {
+        ElMessage.error(d.message || '操作失败')
+      }
       return Promise.reject(new Error(d.message || '操作失败'))
     }
     return d
@@ -27,7 +31,11 @@ service.interceptors.response.use(
       localStorage.removeItem('sw_user')
       router.push({ name: 'login' })
     }
-    ElMessage.error(err.response?.data?.message || err.message || '网络错误')
+    if (err.response?.status === 403) {
+      ElMessage.error('没有操作权限：请使用 official 演示账号，或先在右上角“成为作者”')
+    } else {
+      ElMessage.error(err.response?.data?.message || err.message || '网络错误')
+    }
     return Promise.reject(err)
   }
 )
