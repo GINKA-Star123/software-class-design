@@ -1,5 +1,10 @@
 <template>
-  <div v-if="story" class="page detail">
+  <div
+    v-if="story"
+    class="page detail"
+    :class="{ 'has-cover': !!story.coverUrl }"
+    :style="story.coverUrl ? { '--cover-url': `url('${story.coverUrl}')` } : {}"
+  >
     <PageTitle :title="story.title" :subtitle="story.authorName + ' · ' + (story.category || '未分类')" />
     <el-tag v-if="story.status !== 2" :type="'info'" style="margin-bottom:10px">当前状态：{{ STATUS_TEXT[story.status] }}</el-tag>
     <div class="card main">
@@ -51,6 +56,17 @@ onMounted(async () => {
 })
 </script>
 <style scoped>
+.detail {
+  border-radius: 18px;
+  transition: background 0.3s ease;
+}
+.detail.has-cover {
+  background-image: linear-gradient(rgba(250, 251, 253, 0.9), rgba(250, 251, 253, 0.97)), var(--cover-url);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
 .intro { font-size: 16px; line-height: 1.9; color: var(--text-secondary); }
 .ops { margin-top: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
 .comments { margin-top: 16px; }
