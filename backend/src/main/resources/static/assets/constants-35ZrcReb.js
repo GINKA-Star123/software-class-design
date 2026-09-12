@@ -1,0 +1,1 @@
+var e={0:`草稿`,1:`待审核`,2:`已发布`,3:`已驳回`,4:`已下架`},t={0:`info`,1:`warning`,2:`success`,3:`danger`,4:`info`};export{e as n,t};

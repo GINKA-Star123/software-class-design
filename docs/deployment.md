@@ -1,52 +1,179 @@
 # 部署与运行说明
 
-## 环境要求
+系统支持三种运行方式。普通本机演示推荐单 jar 方式，服务器部署推荐 Docker Compose，二次开发使用源码方式。
 
-- JDK 17+（已在 JDK 25 验证）
-- MySQL 8.0（本仓库默认 localhost:3306，见 application-dev.yml）
-- Node.js 18+
+## 一、环境要求
 
-## 1. 初始化数据库
+| 方式 | 需要安装 |
+| --- | --- |
+| 单 jar 运行 | JDK 17 及以上、MySQL 8.0 |
+| Docker 部署 | Docker、Docker Compose |
+| 源码开发 | JDK 17、Maven、Node.js 18、MySQL 8.0 |
+
+## 二、单 jar 运行（推荐）
+
+`deploy/storyworkshop.jar` 已经包含前端页面、后端程序和相关依赖，只需要一个 Java 进程和 MySQL。
+
+### 1. 初始化数据库
 
 ```bash
-mysql -u root -p < database/schema.sql
-mysql -u root -p < database/seed.sql
-# 或一键：mysql -u root -p < database/init.sql
+mysql -uroot -p < database/schema.sql
+mysql -uroot -p < database/seed.sql
+mysql -uroot -p < database/sample_stories.sql
 ```
 
-默认演示账号 official，密码请在 seed.sql 中查看并确保使用真实 BCrypt 哈希。
+### 2. 启动
 
-## 2. 启动后端
+```bash
+java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone
+```
+
+Windows 下也可以双击 `deploy/启动-单jar.bat`。
+
+如果 MySQL 密码不是默认值：
+
+```bash
+java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone --spring.datasource.password=你的密码
+```
+
+如果 8080 端口被占用：
+
+```bash
+java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone --server.port=8081
+```
+
+浏览器访问 `http://localhost:8080`，演示账号为 `official / 123456`。
+
+上传文件保存在启动目录下的 `uploads` 文件夹中，包括封面和自定义背景图。
+
+## 三、Docker 部署
+
+在项目根目录执行：
+
+```bash
+docker compose up -d --build
+docker compose ps
+```
+
+三个服务如下：
+
+| 服务 | 端口 | 作用 |
+| --- | --- | --- |
+| mysql | 容器内部 3306 | 数据库和初始化脚本 |
+| backend | 8081 | Spring Boot 后端接口 |
+| frontend | 80 | 前端静态资源和反向代理 |
+
+首次启动时，MySQL 容器会自动执行：
+
+1. `database/schema.sql`
+2. `database/seed.sql`
+3. `database/sample_stories.sql`
+
+数据库和上传文件使用命名卷保存，执行 `docker compose down` 不会删除数据。只有执行 `docker compose down -v` 才会清空数据卷。
+
+## 四、源码开发
+
+### 后端
 
 ```bash
 cd backend
 ./mvnw spring-boot:run
-# 如本机 root 密码非 root：
-# 环境变量 SPRING_DATASOURCE_PASSWORD=你的密码 SERVER_PORT=8081 ./mvnw spring-boot:run
 ```
 
-接口前缀 http://localhost:8081/api
+默认接口地址为 `http://localhost:8081/api`。
 
-## 3. 启动前端
+数据库连接配置在 `backend/src/main/resources/application-dev.yml` 中，也可以通过环境变量覆盖：
+
+```bash
+SPRING_DATASOURCE_PASSWORD=你的密码 SERVER_PORT=8081 ./mvnw spring-boot:run
+```
+
+### 前端
 
 ```bash
 cd frontend
 npm install
-npm run dev   # http://localhost:5173
+npm run dev
 ```
 
-Vite 已将 `/api`、`/uploads` 代理到后端 8081。
+访问 `http://localhost:5173`。Vite 会把 `/api` 和 `/uploads` 代理到后端 8081 端口。
 
-## 4. 构建与测试
+如果需要连接其他后端地址：
+
+```powershell
+$env:VITE_API_TARGET='http://你的后端地址'
+npm run dev
+```
+
+## 五、构建
+
+后端打包：
 
 ```bash
-cd backend && ./mvnw test        # 后端单元测试
-cd frontend && npm run build     # 前端生产构建
+cd backend
+./mvnw -DskipTests package
 ```
 
-## 5. 打包部署（可选）
+生成文件：
+
+```text
+backend/target/storyworkshop-0.0.1-SNAPSHOT.jar
+```
+
+前端构建：
 
 ```bash
-cd backend && ./mvnw -DskipTests package
-java -jar target/storyworkshop-0.0.1-SNAPSHOT.jar
+cd frontend
+npm run build
 ```
+
+生成文件：
+
+```text
+frontend/dist/
+```
+
+## 六、测试
+
+```bash
+cd backend
+./mvnw test
+```
+
+```bash
+cd frontend
+npm run build
+```
+
+```bash
+node scripts/validate-sample-stories.mjs
+```
+
+测试内容覆盖 Spring 上下文、注册登录、故事校验、游玩引擎、接口联调、部署冒烟和示例故事结构检查。
+
+## 七、演示账号
+
+```text
+用户名：official
+密码：123456
+```
+
+账号拥有玩家、作者、审核员和管理员角色，可以演示全部业务流程。
+
+## 八、常见问题
+
+### 1. 启动后接口报数据库连接失败
+
+确认 MySQL 已启动，数据库名称为 `story_workshop`，并检查启动命令中的 `--spring.datasource.password` 是否与实际密码一致。
+
+### 2. 首页打开后接口请求失败
+
+单 jar 方式请确认访问的是 `http://localhost:8080`，不要直接双击 `index.html` 打开文件。Docker 或 Nginx 方式请确认 `/api` 已反向代理到后端。
+
+### 3. 上传图片失败
+
+图片格式需要为 jpg、jpeg、png、gif 或 webp，单张图片不能超过 5MB。
+
+### 4. 登录后部分页面提示没有权限
+
+请使用 `official` 账号体验作者、审核员和管理员功能。新注册账号默认只有玩家角色。

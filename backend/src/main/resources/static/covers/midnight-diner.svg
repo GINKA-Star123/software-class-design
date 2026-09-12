@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2236"/>
+      <stop offset="1" stop-color="#2e3c55"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#ffd79a" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#ffd79a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#night)"/>
+  <circle cx="420" cy="170" r="150" fill="url(#glow)"/>
+  <rect x="120" y="250" width="560" height="130" rx="12" fill="#3b2f2a"/>
+  <rect x="150" y="150" width="500" height="120" rx="10" fill="#f6dfb4" opacity=".92"/>
+  <path d="M150 150 L400 60 L650 150 Z" fill="#7d4d3d"/>
+  <rect x="210" y="190" width="90" height="60" rx="6" fill="#c98d5a" opacity=".55"/>
+  <rect x="330" y="190" width="90" height="60" rx="6" fill="#c98d5a" opacity=".55"/>
+  <rect x="450" y="190" width="90" height="60" rx="6" fill="#c98d5a" opacity=".55"/>
+  <ellipse cx="400" cy="330" rx="86" ry="30" fill="#f4e0c4"/>
+  <path d="M340 322 Q400 286 460 322" fill="none" stroke="#b9855f" stroke-width="8"/>
+  <path d="M368 300 Q400 268 432 300" fill="none" stroke="#d7a774" stroke-width="6"/>
+  <circle cx="400" cy="318" r="8" fill="#f3b85d"/>
+  <text x="52" y="86" fill="#ffe8c2" font-size="40" font-weight="700" font-family="'Microsoft YaHei','PingFang SC',sans-serif">深夜食堂的客人</text>
+  <text x="54" y="126" fill="#c8b39a" font-size="18" font-family="'Microsoft YaHei','PingFang SC',sans-serif">都市治愈 · 抉择工坊</text>
+</svg>

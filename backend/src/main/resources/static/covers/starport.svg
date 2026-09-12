@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111a3a"/>
+      <stop offset="0.55" stop-color="#243a6b"/>
+      <stop offset="1" stop-color="#5d7fc4"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9fe8ff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#cdf4ff" stop-opacity=".8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <circle cx="640" cy="90" r="54" fill="#d7ecff" opacity=".85"/>
+  <circle cx="640" cy="90" r="82" fill="none" stroke="#d7ecff" stroke-opacity=".25" stroke-width="2"/>
+  <g fill="#ffffff" opacity=".72">
+    <circle cx="90" cy="70" r="2"/><circle cx="170" cy="120" r="1.5"/><circle cx="260" cy="58" r="2"/>
+    <circle cx="360" cy="110" r="1.5"/><circle cx="520" cy="50" r="2"/><circle cx="730" cy="180" r="1.5"/>
+    <circle cx="460" cy="170" r="1.5"/><circle cx="120" cy="210" r="1.5"/>
+  </g>
+  <g transform="translate(0 250)">
+    <path d="M0 120 L800 120 L800 200 L0 200 Z" fill="#0a1126" opacity=".92"/>
+    <path d="M120 120 L220 40 L320 120 Z" fill="#182a52"/>
+    <path d="M470 120 L560 62 L650 120 Z" fill="#182a52"/>
+    <path d="M300 120 L360 78 L420 120 Z" fill="#2a4276"/>
+    <rect x="180" y="86" width="70" height="34" rx="6" fill="#0f1b38"/>
+    <rect x="520" y="82" width="88" height="38" rx="6" fill="#0f1b38"/>
+    <rect x="620" y="30" width="4" height="90" fill="#8fd7ff"/>
+    <path d="M624 38 L790 74 L624 106 Z" fill="url(#beam)"/>
+  </g>
+  <text x="52" y="86" fill="#ffffff" font-size="42" font-weight="700" font-family="'Microsoft YaHei','PingFang SC',sans-serif">星港最后一班</text>
+  <text x="54" y="128" fill="#b9d6ff" font-size="18" font-family="'Microsoft YaHei','PingFang SC',sans-serif">科幻推理 · 抉择工坊</text>
+</svg>

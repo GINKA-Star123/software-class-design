@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a1218"/>
+      <stop offset="0.55" stop-color="#5a1f27"/>
+      <stop offset="1" stop-color="#8f3438"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffd89a"/>
+      <stop offset="1" stop-color="#ffd89a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#red)"/>
+  <circle cx="210" cy="110" r="120" fill="url(#lamp)" opacity=".55"/>
+  <circle cx="620" cy="180" r="100" fill="url(#lamp)" opacity=".45"/>
+  <rect x="150" y="170" width="120" height="170" rx="58" fill="#e8d7ba"/>
+  <circle cx="210" cy="160" r="34" fill="#e8d7ba"/>
+  <path d="M176 350 L244 350 L232 390 L188 390 Z" fill="#d5bea0"/>
+  <rect x="430" y="150" width="150" height="190" rx="70" fill="#dcc7a7"/>
+  <circle cx="505" cy="140" r="40" fill="#dcc7a7"/>
+  <path d="M466 340 L544 340 L530 390 L480 390 Z" fill="#c8ae8c"/>
+  <g stroke="#3a161d" stroke-width="4" opacity=".55">
+    <path d="M80 60 L80 120"/><path d="M80 120 L60 160"/><path d="M80 120 L100 160"/>
+    <path d="M700 80 L700 140"/><path d="M700 140 L680 180"/><path d="M700 140 L720 180"/>
+  </g>
+  <text x="52" y="86" fill="#ffe6c9" font-size="40" font-weight="700" font-family="'Microsoft YaHei','PingFang SC',sans-serif">纸扎铺的第七夜</text>
+  <text x="54" y="126" fill="#e0b7a8" font-size="18" font-family="'Microsoft YaHei','PingFang SC',sans-serif">民俗志怪 · 抉择工坊</text>
+</svg>

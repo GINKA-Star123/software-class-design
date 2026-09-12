@@ -1,0 +1,22 @@
+开源仓库运行说明
+
+一、如果已经拿到提交包
+直接双击 deploy/启动-单jar.bat，然后按提示输入 MySQL root 密码。
+程序启动后访问 http://localhost:8080，页面同时包含前端和后端接口。
+
+二、如果从 GitHub 克隆的是源码仓库
+先确保本机已安装 JDK 17 和 MySQL 8，然后双击 deploy/构建并启动.bat。
+该脚本会先执行 Maven 打包，再以 standalone 模式启动程序。
+
+三、手动执行方式
+cd backend
+mvnw.cmd -DskipTests package
+java -jar target/storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone --spring.datasource.password=你的密码
+
+四、数据库初始化
+mysql -uroot -p < database/schema.sql
+mysql -uroot -p < database/seed.sql
+mysql -uroot -p < database/sample_stories.sql
+
+五、演示账号
+official / 123456

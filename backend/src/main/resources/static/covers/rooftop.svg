@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd9a8"/>
+      <stop offset="0.5" stop-color="#ffb4a0"/>
+      <stop offset="1" stop-color="#8fb6d9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <circle cx="620" cy="120" r="58" fill="#fff2c9" opacity=".9"/>
+  <path d="M0 320 L160 250 L260 320 L360 230 L480 320 L610 260 L800 330 L800 450 L0 450 Z" fill="#40506b" opacity=".55"/>
+  <path d="M0 360 L120 320 L220 360 L340 300 L460 360 L590 320 L800 370 L800 450 L0 450 Z" fill="#26344c"/>
+  <rect x="300" y="250" width="200" height="130" rx="10" fill="#1f2b40"/>
+  <rect x="320" y="220" width="70" height="40" rx="6" fill="#2f405c"/>
+  <rect x="420" y="220" width="60" height="40" rx="6" fill="#2f405c"/>
+  <g transform="translate(536 178) rotate(8)">
+    <rect x="0" y="0" width="120" height="82" rx="8" fill="#fffaf0" stroke="#e8d8c4" stroke-width="3"/>
+    <path d="M0 0 L60 42 L120 0" fill="none" stroke="#dcb99a" stroke-width="4"/>
+  </g>
+  <text x="52" y="86" fill="#5a2f37" font-size="42" font-weight="700" font-family="'Microsoft YaHei','PingFang SC',sans-serif">天台上的信</text>
+  <text x="54" y="128" fill="#7c4b52" font-size="18" font-family="'Microsoft YaHei','PingFang SC',sans-serif">校园青春 · 抉择工坊</text>
+</svg>

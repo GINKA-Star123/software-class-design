@@ -1,0 +1,28 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:story_workshop}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Hong_Kong&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
+    hikari:
+      initialization-fail-timeout: -1
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+app:
+  standalone: true
+  upload:
+    root-path: ./uploads
+    cover-path: covers
+    avatar-path: avatars
+
+logging:
+  level:
+    com.example.storyworkshop: info
+    org.mybatis: info
