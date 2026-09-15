@@ -1,1 +1,0 @@
-import{t as e}from"./request-D3CdlYZ9.js";var t=()=>e.get(`/home`),n=t=>e.get(`/stories`,{params:t}),r=t=>e.get(`/stories/`+t),i=(t=20)=>e.get(`/stats/rank`,{params:{limit:t}});export{i,t as n,n as r,r as t};

@@ -1,0 +1,1 @@
+import{Br as e,Lr as t,Qi as n,si as r}from"./router-cTO8ev01.js";import{t as i}from"./_plugin-vue_export-helper-BDNMzG2s.js";var a={class:`empty-state`},o=i({__name:`EmptyState`,props:{text:{type:String,default:`暂无数据`}},setup(i){return(o,s)=>(r(),e(`div`,a,[t(`p`,null,n(i.text),1)]))}},[[`__scopeId`,`data-v-6b7603c0`]]);export{o as t};

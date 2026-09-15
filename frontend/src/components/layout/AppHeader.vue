@@ -146,4 +146,63 @@ async function uploadBg({ file }) {
 .bg-preview { margin-top: 10px; }
 .bg-preview img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); display: block; margin-bottom: 6px; }
 .reset-btn { margin-top: 16px; }
+@media (max-width: 767px) {
+  .header-inner {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 12px;
+  }
+  .logo {
+    flex: none;
+    font-size: 17px;
+  }
+  .right {
+    order: 2;
+    margin-left: auto;
+    gap: 6px;
+  }
+  .nav {
+    order: 3;
+    flex: 1 0 100%;
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav a {
+    flex: none;
+    white-space: nowrap;
+    padding: 3px 0;
+  }
+  .user {
+    max-width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .appearance-btn {
+    padding: 4px 6px;
+  }
+}
+@media (max-width: 420px) {
+  .header-inner {
+    padding: 8px 10px;
+  }
+  .logo {
+    font-size: 16px;
+  }
+  .nav {
+    gap: 8px;
+    font-size: 13px;
+  }
+}
 </style>

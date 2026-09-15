@@ -1,1 +1,0 @@
-import{t as e}from"./request-D3CdlYZ9.js";var t=t=>e.post(`/play/stories/`+t+`/start`),n=t=>e.post(`/play/choose`,t),r=()=>e.get(`/play/progress`),i=t=>e.post(`/play/progress/`+t+`/reset`);export{t as i,r as n,i as r,n as t};

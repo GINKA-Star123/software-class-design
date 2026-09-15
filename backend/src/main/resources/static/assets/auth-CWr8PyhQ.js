@@ -1,1 +1,0 @@
-import{t as e}from"./request-D3CdlYZ9.js";var t=t=>e.post(`/auth/register`,t),n=t=>e.post(`/auth/login`,t),r=()=>e.post(`/auth/logout`);export{r as n,t as r,n as t};

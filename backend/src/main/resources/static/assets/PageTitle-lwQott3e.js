@@ -1,0 +1,1 @@
+import{Br as e,Lr as t,Qi as n,si as r,zr as i}from"./router-cTO8ev01.js";var a={class:`page-title-wrap`},o={class:`page-title`},s={key:0,class:`page-sub`},c={__name:`PageTitle`,props:{title:String,subtitle:String},setup(c){return(l,u)=>(r(),e(`div`,a,[t(`h1`,o,n(c.title),1),c.subtitle?(r(),e(`p`,s,n(c.subtitle),1)):i(``,!0)]))}};export{c as t};
