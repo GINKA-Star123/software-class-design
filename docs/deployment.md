@@ -61,7 +61,7 @@ java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone --spring.
 java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone --server.port=8081
 ```
 
-浏览器访问 `http://localhost:8080`，演示账号为 `official / 123456`。
+启动脚本会自动检测 8080；如果被占用，会自动改用 8081。浏览器默认访问 `http://localhost:8080`；如果启动窗口显示 `Starting on port 8081`，或者日志显示 `Tomcat started on port 8081`，请访问 `http://localhost:8081`。实际访问端口以启动窗口显示的端口为准。演示账号为 `official / 123456`。
 
 上传文件保存在启动目录下的 `uploads` 文件夹中，包括封面和自定义背景图。
 
@@ -187,7 +187,7 @@ node scripts/validate-sample-stories.mjs
 
 ### 2. 首页打开后接口请求失败
 
-单 jar 方式请确认访问的是 `http://localhost:8080`，不要直接双击 `index.html` 打开文件。Docker 或 Nginx 方式请确认 `/api` 已反向代理到后端。
+单 jar 方式请以启动窗口显示的端口为准。默认访问 `http://localhost:8080`；如果窗口显示 `Starting on port 8081`，则访问 `http://localhost:8081`。不要直接双击 `index.html` 打开文件。Docker 或 Nginx 方式请确认 `/api` 已反向代理到后端。
 
 ### 3. 上传图片失败
 

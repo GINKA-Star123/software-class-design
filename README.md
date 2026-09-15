@@ -102,7 +102,13 @@ http://localhost:8080
 official / 123456
 ```
 
-如果 8080 端口被占用，可以追加参数 `--server.port=8081`。
+访问地址以启动窗口或日志中实际显示的端口为准。程序默认使用 8080；如果 8080 已被占用，`启动-单jar.bat` 会自动改用 8081，并在窗口中显示 `Starting on port 8081 ...`，日志中显示 `Tomcat started on port 8081 (http)`，此时请访问 `http://localhost:8081`。
+
+手动启动时也可以明确指定端口：
+
+```powershell
+java -jar deploy\storyworkshop.jar --spring.profiles.active=standalone --server.port=8081 --spring.datasource.password=123456
+```
 
 ## 四、Docker 部署
 
