@@ -31,19 +31,38 @@ docker-compose.yml
 
 只需要 JDK 17 及以上版本和 MySQL 8.0，不需要安装 Node.js、Nginx 或 Docker。
 
-### 1. 初始化数据库
+### 1. 确认 MySQL 已启动
 
-依次执行：
+在 PowerShell 中执行：
 
-```bash
-mysql -uroot -p < database/schema.sql
-mysql -uroot -p < database/seed.sql
-mysql -uroot -p < database/sample_stories.sql
+```powershell
+Get-Service MySQL*
+mysql --version
 ```
 
-也可以使用 Navicat、DataGrip 或 MySQL Workbench 直接运行这三个 SQL 文件。
+`Get-Service` 应显示 MySQL 服务处于 `Running` 状态。如果没有 MySQL 服务，请先启动 MySQL，或者参考 `docs/deployment.md` 初始化并安装本机 MySQL 服务。
 
-### 2. 启动程序
+### 2. 初始化数据库
+
+Windows PowerShell 不支持 `<` 输入重定向，所以在 PowerShell 中使用下面的写法：
+
+```powershell
+cmd /c "mysql -uroot -p < database\schema.sql"
+cmd /c "mysql -uroot -p < database\seed.sql"
+cmd /c "mysql -uroot -p < database\sample_stories.sql"
+```
+
+每次会提示输入 root 密码。也可以在 CMD 中执行，或者直接使用 Navicat、DataGrip、MySQL Workbench 运行这三个 SQL 文件。
+
+如果提示找不到 `mysql` 命令，请把 MySQL 的 `bin` 目录加入 PATH，或者用完整路径执行，例如：
+
+```powershell
+cmd /c "C:\Users\fawn\MySQL\mysql-8.0.46-winx64\bin\mysql.exe -uroot -p < database\schema.sql"
+```
+
+提交包中的 `deploy/初始化数据库.bat` 也可以按顺序执行这三个脚本。
+
+### 3. 启动程序
 
 如果使用提交包中的 `deploy/storyworkshop.jar`，Windows 下直接双击：
 

@@ -16,11 +16,28 @@
 
 ### 1. 初始化数据库
 
-```bash
-mysql -uroot -p < database/schema.sql
-mysql -uroot -p < database/seed.sql
-mysql -uroot -p < database/sample_stories.sql
+先确认 MySQL 服务已经运行：
+
+```powershell
+Get-Service MySQL*
+mysql --version
 ```
+
+Windows PowerShell 不支持 `<` 输入重定向，因此在 PowerShell 中执行：
+
+```powershell
+cmd /c "mysql -uroot -p < database\schema.sql"
+cmd /c "mysql -uroot -p < database\seed.sql"
+cmd /c "mysql -uroot -p < database\sample_stories.sql"
+```
+
+如果 `mysql` 不在 PATH 中，可以使用完整路径：
+
+```powershell
+cmd /c "C:\Users\fawn\MySQL\mysql-8.0.46-winx64\bin\mysql.exe -uroot -p < database\schema.sql"
+```
+
+也可以使用 Navicat、DataGrip 或 MySQL Workbench 直接运行三个 SQL 文件。
 
 ### 2. 启动
 
@@ -29,6 +46,8 @@ java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone
 ```
 
 Windows 下也可以双击 `deploy/启动-单jar.bat`。
+
+提交包中的 `deploy/初始化数据库.bat` 可以在 MySQL 已启动的前提下自动执行三个 SQL 文件。
 
 如果 MySQL 密码不是默认值：
 
