@@ -64,11 +64,35 @@ cmd /c "C:\Users\fawn\MySQL\mysql-8.0.46-winx64\bin\mysql.exe -uroot -p < databa
 
 ### 3. 启动程序
 
-如果使用提交包中的 `deploy/storyworkshop.jar`，Windows 下直接双击：
+初始化数据库只完成了数据准备，网站不会自动运行，还需要启动项目 jar。
+
+如果使用提交包中的 `deploy/storyworkshop.jar`，Windows 下双击：
 
 ```text
 deploy/启动-单jar.bat
 ```
+
+脚本会提示：
+
+```text
+Enter MySQL root password [default 123456]:
+```
+
+输入 MySQL 密码后回车。脚本会自动检测 8080 端口，如果 8080 被占用，会自动改用 8081，并显示实际使用的端口。
+
+**启动程序的 PowerShell 窗口必须保持打开。** 关闭窗口后服务会立即停止，浏览器访问时会出现：
+
+```text
+ERR_CONNECTION_REFUSED
+```
+
+也可以手动执行：
+
+```powershell
+java -jar deploy\storyworkshop.jar --spring.profiles.active=standalone --server.port=8081 --spring.datasource.password=123456
+```
+
+如果 MySQL 密码不是 123456，把最后一项改成实际密码。
 
 如果从 GitHub 克隆的是源码仓库，先执行：
 
@@ -76,24 +100,36 @@ deploy/启动-单jar.bat
 deploy/构建并启动.bat
 ```
 
-该脚本会先运行 Maven 打包，再启动 standalone 模式。也可以手动执行：
+该脚本会先运行 Maven 打包，再启动 standalone 模式。源码方式也可以手动执行：
 
 ```bash
 cd backend
 ./mvnw -DskipTests package
-java -jar target/storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone
+java -jar target/storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone --server.port=8081 --spring.datasource.password=123456
 ```
 
-如果本机 MySQL 密码不是 `123456`，使用：
+启动成功的标志是日志中出现：
 
-```bash
-java -jar target/storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone --spring.datasource.password=你的密码
+```text
+Tomcat started on port 8081 (http)
 ```
 
-启动后访问：
+也可能是：
+
+```text
+Tomcat started on port 8080 (http)
+```
+
+按日志中的端口访问：
 
 ```text
 http://localhost:8080
+```
+
+或：
+
+```text
+http://localhost:8081
 ```
 
 演示账号：
@@ -102,12 +138,27 @@ http://localhost:8080
 official / 123456
 ```
 
-访问地址以启动窗口或日志中实际显示的端口为准。程序默认使用 8080；如果 8080 已被占用，`启动-单jar.bat` 会自动改用 8081，并在窗口中显示 `Starting on port 8081 ...`，日志中显示 `Tomcat started on port 8081 (http)`，此时请访问 `http://localhost:8081`。
-
-手动启动时也可以明确指定端口：
+启动后可以检查端口是否在监听：
 
 ```powershell
-java -jar deploy\storyworkshop.jar --spring.profiles.active=standalone --server.port=8081 --spring.datasource.password=123456
+Get-NetTCPConnection -LocalPort 8081 -State Listen
+```
+
+```powershell
+curl.exe -i http://localhost:8081/
+```
+
+如果提示 `ERR_CONNECTION_REFUSED`，通常表示 jar 窗口已经关闭、程序启动失败，或者实际使用的不是 8081 端口。请查看启动窗口中的 `Tomcat started on port ...` 日志。
+
+如果提示 `Port 8080 was already in use`，可以：
+
+1. 直接使用 `启动-单jar.bat`，它会自动切换到 8081；
+2. 或者手动追加 `--server.port=8081`；
+3. 或者停止占用 8080 的旧 Java 进程：
+
+```powershell
+netstat -ano | findstr :8080
+Stop-Process -Id 进程号 -Force
 ```
 
 ## 四、Docker 部署

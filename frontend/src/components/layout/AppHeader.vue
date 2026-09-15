@@ -146,7 +146,7 @@ async function uploadBg({ file }) {
 .bg-preview { margin-top: 10px; }
 .bg-preview img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); display: block; margin-bottom: 6px; }
 .reset-btn { margin-top: 16px; }
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .header-inner {
     height: auto;
     min-height: 56px;

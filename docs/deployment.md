@@ -63,6 +63,13 @@ java -jar deploy/storyworkshop.jar --spring.profiles.active=standalone --server.
 
 启动脚本会自动检测 8080；如果被占用，会自动改用 8081。浏览器默认访问 `http://localhost:8080`；如果启动窗口显示 `Starting on port 8081`，或者日志显示 `Tomcat started on port 8081`，请访问 `http://localhost:8081`。实际访问端口以启动窗口显示的端口为准。演示账号为 `official / 123456`。
 
+启动 jar 的窗口必须保持打开。关闭窗口后服务会停止，浏览器会显示 `ERR_CONNECTION_REFUSED`。可以用下面的命令检查端口：
+
+```powershell
+Get-NetTCPConnection -LocalPort 8081 -State Listen
+curl.exe -i http://localhost:8081/
+```
+
 上传文件保存在启动目录下的 `uploads` 文件夹中，包括封面和自定义背景图。
 
 ## 三、Docker 部署
