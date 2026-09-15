@@ -1,17 +1,20 @@
 @echo off
-chcp 65001 >nul
-set /p DBPASS=请输入 MySQL root 密码（默认 123456，直接回车使用默认值）：
+setlocal
+set /p DBPASS=Enter MySQL root password [default 123456]: 
 if "%DBPASS%"=="" set DBPASS=123456
 echo.
-echo 正在编译后端，请稍候...
+echo Building backend...
 cd /d "%~dp0..\backend"
 call mvnw.cmd -DskipTests package
 if errorlevel 1 (
-  echo 编译失败，请检查 Maven 输出。
+  echo Build failed. Check the Maven output.
   pause
   exit /b 1
 )
+set PORT=8080
+netstat -ano | findstr ":8080" | findstr "LISTENING" >nul
+if not errorlevel 1 set PORT=8081
 echo.
-echo 正在启动，请稍候...
-java -jar target\storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone --spring.datasource.password=%DBPASS%
+echo Starting on port %PORT% ...
+java -jar target\storyworkshop-0.0.1-SNAPSHOT.jar --spring.profiles.active=standalone --server.port=%PORT% --spring.datasource.password=%DBPASS%
 pause
